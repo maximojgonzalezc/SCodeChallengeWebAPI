@@ -38,6 +38,7 @@ namespace SolsticeCodeChallengeWebAPI.Models
         public class ContactPhone
         {
             public long ContactPhoneid { get; set; }
+            [Required(ErrorMessage = "Personal Phone is required ")]
             public string PersonalPhone { get; set; }
             public string WorkPhone { get; set; }
             public Contact Contact { get; set; }

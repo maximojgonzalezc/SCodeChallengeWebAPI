@@ -47,14 +47,14 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            var Contacts = await _context.Contacts.Include(e => e.ContactPhone).Include(e => e.Address).ToListAsync();
+            var Contacts = await _context.Contacts.ToListAsync();
             return new OkObjectResult(Contacts);
         }
         // GET: api/Contact/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(long id)
         {
-            var contact = await _context.Contacts.Where(e => e.Id == id).Include(e => e.ContactPhone).Include(e => e.Address).FirstOrDefaultAsync();
+            var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
             if (contact == null)
             {
                 return NotFound();
@@ -75,22 +75,9 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         {
             if (id != contact.Id)
             {
-                return BadRequest();
+                return BadRequest("Wrong ID");
             }
-            // no funcionó --> _context.Contacts.Include(e => e.ContactPhone);
-            //no funcionó --> contact.ContactPhone.Contact = contact;
-            //Funciono pero no va 
-            // elimino el registro de la relacion del contacto 
-            _context.ContactPhones.Remove(await _context.ContactPhones.
-                                                    Where(e => e.ContactPhonesContactForeignKey == id)
-                                                    .FirstOrDefaultAsync());
-            _context.ContactAddress.Remove(await _context.ContactAddress.
-                                        Where(e => e.AddresssContactForeignKey == id)
-                                        .FirstOrDefaultAsync());
-            //y lo vuelvo a crear
-            await _context.SaveChangesAsync();
-            _context.ContactPhones.Add(contact.ContactPhone);
-            _context.ContactAddress.Add(contact.Address);
+
             _context.Entry(contact).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
@@ -99,17 +86,11 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(long id)
         {
-            var contact = await _context.Contacts.Where(e => e.Id == id).Include(e => e.ContactPhone).FirstOrDefaultAsync();
+            var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
             if (contact == null)
             {
                 return NotFound();
             }
-            _context.ContactPhones.Remove(await _context.ContactPhones.
-                                        Where(e => e.ContactPhonesContactForeignKey == id)
-                                        .FirstOrDefaultAsync());
-            _context.ContactAddress.Remove(await _context.ContactAddress.
-                            Where(e => e.AddresssContactForeignKey == id)
-                            .FirstOrDefaultAsync());
             _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();
             return NoContent();

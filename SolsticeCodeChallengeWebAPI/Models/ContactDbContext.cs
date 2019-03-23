@@ -17,13 +17,8 @@ namespace SolsticeCodeChallengeWebAPI.Models
         {
             modelBuilder.Entity<Contact>(e =>
             {
-                e.HasOne(x => x.ContactPhone)
-                    .WithOne(y => y.Contact)
-                    .HasForeignKey<ContactPhone>(z => z.ContactPhonesContactForeignKey);
-
-                e.HasOne(x => x.Address)
-                    .WithOne(y => y.Contact)
-                    .HasForeignKey<Address>(z => z.AddresssContactForeignKey);
+                e.OwnsOne(p => p.Address);
+                e.OwnsOne(p => p.ContactPhone);
             });
         }
     }
