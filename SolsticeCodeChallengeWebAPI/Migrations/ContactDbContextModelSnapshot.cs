@@ -52,17 +52,18 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("AddressLine1");
+                            b1.Property<string>("AddressLine1")
+                                .HasColumnName("AddressLine1");
 
                             b1.Property<string>("AddressLine2");
 
-                            b1.Property<long>("AddresssContactForeignKey");
-
                             b1.Property<string>("City")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("City");
 
                             b1.Property<string>("State")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("State");
 
                             b1.HasKey("id");
 
@@ -82,12 +83,12 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
 
                             b1.Property<long>("ContactPhoneid");
 
-                            b1.Property<long>("ContactPhonesContactForeignKey");
-
                             b1.Property<string>("PersonalPhone")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("PersonalPhone");
 
-                            b1.Property<string>("WorkPhone");
+                            b1.Property<string>("WorkPhone")
+                                .HasColumnName("WorkPhone");
 
                             b1.HasKey("ContactId");
 

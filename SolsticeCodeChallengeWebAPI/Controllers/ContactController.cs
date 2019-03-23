@@ -16,10 +16,10 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         public ContactController(ContactDbContext context)
         {
             _context = context;
+            
             if (_context.Contacts.Count() == 0)
             {
                 // Create a new Contact if collection is empty,
-                // which means you can't delete all Contacts.
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Proof1",
@@ -43,25 +43,48 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                 _context.SaveChanges();
             }
         }
-        // GET: api/Contact
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts([FromQuery(Name = "stateorcity")] string stateOrCity, [FromQuery(Name = "emailorphone")] string emailorphone)
         {
-            var Contacts = await _context.Contacts.ToListAsync();
-            return new OkObjectResult(Contacts);
+            if (!string.IsNullOrEmpty(stateOrCity) && !string.IsNullOrEmpty(emailorphone))
+            {
+                return new BadRequestObjectResult("Both query params must not have values");
+            }
+
+            if (!string.IsNullOrEmpty(stateOrCity))
+            {
+                var filteredList = await _context.Contacts.Where(e => 
+                       e.Address.City.Equals(stateOrCity) || 
+                        e.Address.State.Equals(stateOrCity))
+                        .ToListAsync();
+                if (filteredList.Count() == 0){return new NotFoundObjectResult($"There are no contacts with {stateOrCity} as their State nor City");}
+
+                return new OkObjectResult(await _context.Contacts.Where(e => e.Address.City.Equals(stateOrCity) || e.Address.State.Equals(stateOrCity)).ToListAsync());
+            }else if (!string.IsNullOrEmpty(emailorphone))
+            {
+                var contact = await _context.Contacts.Where(e =>
+                    e.ContactPhone.PersonalPhone.Equals(emailorphone) ||
+                    e.ContactPhone.WorkPhone.Equals(emailorphone) ||
+                    e.Email.Equals(emailorphone)).
+                    FirstOrDefaultAsync();
+                if (contact == null){return new NotFoundObjectResult($"There is no contact with {emailorphone} as their Email nor their phone");}
+            }
+
+            return new OkObjectResult(await _context.Contacts.ToListAsync());
         }
-        // GET: api/Contact/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(long id)
         {
             var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
             if (contact == null)
             {
-                return NotFound();
+                return new NotFoundObjectResult($"There is no contact with ID: {id}");
             }
             return new OkObjectResult(contact);
         }
-        // POST: api/Contact
+
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
@@ -69,20 +92,25 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
         }
-        // PUT: api/Contact/5
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact(long id, Contact contact)
         {
             if (id != contact.Id)
             {
-                return BadRequest("Wrong ID");
+                return new BadRequestObjectResult($"There is no contact with ID: {id}");
             }
 
             _context.Update(contact).State = EntityState.Modified;
+            // or the followings are also valid
+            // context.Students.Update(contact);
+            // context.Attach<Student>(contact).State = EntityState.Modified;
+            // context.Entry<Student>(contact).State = EntityState.Modified; 
+
             await _context.SaveChangesAsync();
-            return NoContent();
+            return new NoContentResult();
         }
-        // DELETE: api/Todo/5
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(long id)
         {
@@ -93,7 +121,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             }
             _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return new NoContentResult();
         }
     }
 }

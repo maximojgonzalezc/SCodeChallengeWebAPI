@@ -10,8 +10,8 @@ using SolsticeCodeChallengeWebAPI.Models;
 namespace SolsticeCodeChallengeWebAPI.Migrations
 {
     [DbContext(typeof(ContactDbContext))]
-    [Migration("20190323185832_Migration3")]
-    partial class Migration3
+    [Migration("20190323194119_Migration2")]
+    partial class Migration2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,17 +54,18 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("AddressLine1");
+                            b1.Property<string>("AddressLine1")
+                                .HasColumnName("AddressLine1");
 
                             b1.Property<string>("AddressLine2");
 
-                            b1.Property<long>("AddresssContactForeignKey");
-
                             b1.Property<string>("City")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("City");
 
                             b1.Property<string>("State")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("State");
 
                             b1.HasKey("id");
 
@@ -84,12 +85,12 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
 
                             b1.Property<long>("ContactPhoneid");
 
-                            b1.Property<long>("ContactPhonesContactForeignKey");
-
                             b1.Property<string>("PersonalPhone")
-                                .IsRequired();
+                                .IsRequired()
+                                .HasColumnName("PersonalPhone");
 
-                            b1.Property<string>("WorkPhone");
+                            b1.Property<string>("WorkPhone")
+                                .HasColumnName("WorkPhone");
 
                             b1.HasKey("ContactId");
 
