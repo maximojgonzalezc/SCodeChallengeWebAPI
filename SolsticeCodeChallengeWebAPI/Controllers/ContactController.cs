@@ -69,6 +69,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                     e.Email.Equals(emailorphone)).
                     FirstOrDefaultAsync();
                 if (contact == null){return new NotFoundObjectResult($"There is no contact with {emailorphone} as their Email nor their phone");}
+                return new OkObjectResult(contact);
             }
 
             return new OkObjectResult(await _context.Contacts.ToListAsync());
