@@ -84,8 +84,13 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             _context.ContactPhones.Remove(await _context.ContactPhones.
                                                     Where(e => e.ContactPhonesContactForeignKey == id)
                                                     .FirstOrDefaultAsync());
+            _context.ContactAddress.Remove(await _context.ContactAddress.
+                                        Where(e => e.AddresssContactForeignKey == id)
+                                        .FirstOrDefaultAsync());
             //y lo vuelvo a crear
+            await _context.SaveChangesAsync();
             _context.ContactPhones.Add(contact.ContactPhone);
+            _context.ContactAddress.Add(contact.Address);
             _context.Entry(contact).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
@@ -102,6 +107,9 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             _context.ContactPhones.Remove(await _context.ContactPhones.
                                         Where(e => e.ContactPhonesContactForeignKey == id)
                                         .FirstOrDefaultAsync());
+            _context.ContactAddress.Remove(await _context.ContactAddress.
+                            Where(e => e.AddresssContactForeignKey == id)
+                            .FirstOrDefaultAsync());
             _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();
             return NoContent();
