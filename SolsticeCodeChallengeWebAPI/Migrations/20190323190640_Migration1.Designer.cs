@@ -10,8 +10,8 @@ using SolsticeCodeChallengeWebAPI.Models;
 namespace SolsticeCodeChallengeWebAPI.Migrations
 {
     [DbContext(typeof(ContactDbContext))]
-    [Migration("20190323185832_Migration3")]
-    partial class Migration3
+    [Migration("20190323190640_Migration1")]
+    partial class Migration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,8 +58,6 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
 
                             b1.Property<string>("AddressLine2");
 
-                            b1.Property<long>("AddresssContactForeignKey");
-
                             b1.Property<string>("City")
                                 .IsRequired();
 
@@ -83,8 +81,6 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<long>("ContactPhoneid");
-
-                            b1.Property<long>("ContactPhonesContactForeignKey");
 
                             b1.Property<string>("PersonalPhone")
                                 .IsRequired();

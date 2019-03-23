@@ -56,8 +56,6 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
 
                             b1.Property<string>("AddressLine2");
 
-                            b1.Property<long>("AddresssContactForeignKey");
-
                             b1.Property<string>("City")
                                 .IsRequired();
 
@@ -81,8 +79,6 @@ namespace SolsticeCodeChallengeWebAPI.Migrations
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<long>("ContactPhoneid");
-
-                            b1.Property<long>("ContactPhonesContactForeignKey");
 
                             b1.Property<string>("PersonalPhone")
                                 .IsRequired();

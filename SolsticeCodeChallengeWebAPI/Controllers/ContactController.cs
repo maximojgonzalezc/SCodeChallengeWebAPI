@@ -19,7 +19,6 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             if (_context.Contacts.Count() == 0)
             {
                 // Create a new Contact if collection is empty,
-                // which means you can't delete all Contacts.
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Proof1",
@@ -43,14 +42,14 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                 _context.SaveChanges();
             }
         }
-        // GET: api/Contact
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
             var Contacts = await _context.Contacts.ToListAsync();
             return new OkObjectResult(Contacts);
         }
-        // GET: api/Contact/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(long id)
         {
@@ -61,7 +60,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             }
             return new OkObjectResult(contact);
         }
-        // POST: api/Contact
+
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
@@ -69,7 +68,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
         }
-        // PUT: api/Contact/5
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact(long id, Contact contact)
         {
@@ -79,10 +78,15 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             }
 
             _context.Update(contact).State = EntityState.Modified;
+            // or the followings are also valid
+            // context.Students.Update(contact);
+            // context.Attach<Student>(contact).State = EntityState.Modified;
+            // context.Entry<Student>(contact).State = EntityState.Modified; 
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
-        // DELETE: api/Todo/5
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(long id)
         {

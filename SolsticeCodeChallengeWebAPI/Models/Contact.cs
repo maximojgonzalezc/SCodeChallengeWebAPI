@@ -32,7 +32,6 @@ namespace SolsticeCodeChallengeWebAPI.Models
             [Required(ErrorMessage = "Address State is required ")]
             public string State { get; set; }
             public Contact Contact { get; set; }
-            public long AddresssContactForeignKey { get; set; }
         }
 
         public class ContactPhone
@@ -42,7 +41,6 @@ namespace SolsticeCodeChallengeWebAPI.Models
             public string PersonalPhone { get; set; }
             public string WorkPhone { get; set; }
             public Contact Contact { get; set; }
-            public long ContactPhonesContactForeignKey { get; set; }
         }
 }
 
