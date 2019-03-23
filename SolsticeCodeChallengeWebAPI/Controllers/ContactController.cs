@@ -78,7 +78,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                 return BadRequest("Wrong ID");
             }
 
-            _context.Entry(contact).State = EntityState.Modified;
+            _context.Update(contact).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
         }
