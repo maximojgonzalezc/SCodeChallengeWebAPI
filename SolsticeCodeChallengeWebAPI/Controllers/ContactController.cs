@@ -16,6 +16,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         public ContactController(ContactDbContext context)
         {
             _context = context;
+            
             if (_context.Contacts.Count() == 0)
             {
                 // Create a new Contact if collection is empty,
@@ -44,8 +45,32 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts([FromQuery(Name = "stateorcity")] string stateOrCity, [FromQuery(Name = "emailorphone")] string emailorphone)
         {
+            if (!string.IsNullOrEmpty(stateOrCity) && !string.IsNullOrEmpty(emailorphone))
+            {
+                return new BadRequestObjectResult("Both query params must not have values");
+            }
+
+            if (!string.IsNullOrEmpty(stateOrCity))
+            {
+                var filteredList = await _context.Contacts.Where(e => 
+                       e.Address.City.Equals(stateOrCity) || 
+                        e.Address.State.Equals(stateOrCity))
+                        .ToListAsync();
+                if (filteredList.Count() == 0){return new NotFoundObjectResult($"There are no contacts with {stateOrCity} as their State nor City");}
+
+                return new OkObjectResult(await _context.Contacts.Where(e => e.Address.City.Equals(stateOrCity) || e.Address.State.Equals(stateOrCity)).ToListAsync());
+            }else if (!string.IsNullOrEmpty(emailorphone))
+            {
+                var contact = await _context.Contacts.Where(e =>
+                    e.ContactPhone.PersonalPhone.Equals(emailorphone) ||
+                    e.ContactPhone.WorkPhone.Equals(emailorphone) ||
+                    e.Email.Equals(emailorphone)).
+                    FirstOrDefaultAsync();
+                if (contact == null){return new NotFoundObjectResult($"There is no contact with {emailorphone} as their Email nor their phone");}
+            }
+
             return new OkObjectResult(await _context.Contacts.ToListAsync());
         }
 
@@ -55,7 +80,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
             if (contact == null)
             {
-                return NotFound();
+                return new NotFoundObjectResult($"There is no contact with ID: {id}");
             }
             return new OkObjectResult(contact);
         }
@@ -73,7 +98,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         {
             if (id != contact.Id)
             {
-                return BadRequest("Wrong ID");
+                return new BadRequestObjectResult($"There is no contact with ID: {id}");
             }
 
             _context.Update(contact).State = EntityState.Modified;
@@ -83,7 +108,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             // context.Entry<Student>(contact).State = EntityState.Modified; 
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return new NoContentResult();
         }
 
         [HttpDelete("{id}")]
@@ -96,7 +121,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             }
             _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return new NoContentResult();
         }
     }
 }
