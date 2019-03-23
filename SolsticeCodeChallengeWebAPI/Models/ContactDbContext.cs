@@ -17,8 +17,13 @@ namespace SolsticeCodeChallengeWebAPI.Models
         {
             modelBuilder.Entity<Contact>(e =>
             {
-                e.OwnsOne(p => p.Address);
-                e.OwnsOne(p => p.ContactPhone);
+                e.OwnsOne(p => p.Address).Property(c => c.AddressLine1).HasColumnName("AddressLine1");
+                e.OwnsOne(p => p.Address).Property(c => c.City).HasColumnName("City");
+                e.OwnsOne(p => p.Address).Property(c => c.State).HasColumnName("State");
+
+                e.OwnsOne(p => p.ContactPhone).Property(c => c.PersonalPhone).HasColumnName("PersonalPhone");
+                e.OwnsOne(p => p.ContactPhone).Property(c => c.WorkPhone).HasColumnName("WorkPhone");
+
             });
         }
     }

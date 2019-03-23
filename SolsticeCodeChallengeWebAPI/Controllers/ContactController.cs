@@ -46,8 +46,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            var Contacts = await _context.Contacts.ToListAsync();
-            return new OkObjectResult(Contacts);
+            return new OkObjectResult(await _context.Contacts.ToListAsync());
         }
 
         [HttpGet("{id}")]
