@@ -18,6 +18,7 @@ namespace SolsticeCodeChallengeWebAPI.Models
             public DateTime BirthDate { get; set; }
             [Required(ErrorMessage = "Contact phone is required ")]
             public ContactPhone ContactPhone { get; set; }
+            [Required(ErrorMessage = "Contact Address is required ")]
             public Address Address { get; set; }
         }
 
@@ -26,7 +27,9 @@ namespace SolsticeCodeChallengeWebAPI.Models
             public long id { get; set; }
             public string AddressLine1 { get; set; }
             public string AddressLine2 { get; set; }
+            [Required(ErrorMessage = "Address City is required ")]
             public string City { get; set; }
+            [Required(ErrorMessage = "Address State is required ")]
             public string State { get; set; }
             public Contact Contact { get; set; }
             public long AddresssContactForeignKey { get; set; }
