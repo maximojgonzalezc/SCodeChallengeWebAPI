@@ -45,6 +45,7 @@ namespace SolsticeCodeChallengeWebAPI
             }
 
             app.UseHttpsRedirection();
+
             app.UseMvc();
         }
     }

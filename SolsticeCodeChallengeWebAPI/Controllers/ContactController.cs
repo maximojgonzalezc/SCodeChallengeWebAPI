@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SolsticeCodeChallengeWebAPI.Models;
-using System;
+using SolsticeCodeChallengeWebAPI.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,36 +11,13 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
     [ApiController]
     public class ContactController : ControllerBase
     {
-        private readonly ContactDbContext _context;
+        //private readonly ContactDbContext _context;
+        private readonly ContactService _service;
+
         public ContactController(ContactDbContext context)
         {
-            _context = context;
-            
-            if (_context.Contacts.Count() == 0)
-            {
-                // Create a new Contact if collection is empty,
-                _context.Contacts.Add(new Contact
-                {
-                    Name = "Proof1",
-                    Company = "Organization X",
-                    ProfileImageURL = "SomeURL",
-                    Email = "example@live.com",
-                    BirthDate = new DateTime(1991, 02, 28),
-                    ContactPhone = new ContactPhone
-                    {
-                        PersonalPhone = "123456",
-                        WorkPhone = "456789"
-                    },
-                    Address = new Address
-                    {
-                        AddressLine1 = "4321 Sesame Street",
-                        AddressLine2 = "Suite 900",
-                        City = "Hollywood",
-                        State = "Los Angeles"
-                    }
-                });
-                _context.SaveChanges();
-            }
+            ContactService service = new ContactService(context);
+            _service = service;
         }
 
         [HttpGet]
@@ -54,31 +30,34 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
 
             if (!string.IsNullOrEmpty(stateOrCity))
             {
-                var filteredList = await _context.Contacts.Where(e => 
-                       e.Address.City.Equals(stateOrCity) || 
-                        e.Address.State.Equals(stateOrCity))
-                        .ToListAsync();
-                if (filteredList.Count() == 0){return new NotFoundObjectResult($"There are no contacts with {stateOrCity} as their State nor City");}
+                var filteredList = await _service.FilterAsync(stateOrCity);
 
-                return new OkObjectResult(await _context.Contacts.Where(e => e.Address.City.Equals(stateOrCity) || e.Address.State.Equals(stateOrCity)).ToListAsync());
+                if (!(filteredList.Count() == 0))
+                {
+                    return new OkObjectResult(filteredList);
+                }
+                else return new NotFoundObjectResult($"There are no contacts with {stateOrCity} as their State nor City"); 
+
             }else if (!string.IsNullOrEmpty(emailorphone))
             {
-                var contact = await _context.Contacts.Where(e =>
-                    e.ContactPhone.PersonalPhone.Equals(emailorphone) ||
-                    e.ContactPhone.WorkPhone.Equals(emailorphone) ||
-                    e.Email.Equals(emailorphone)).
-                    FirstOrDefaultAsync();
-                if (contact == null){return new NotFoundObjectResult($"There is no contact with {emailorphone} as their Email nor their phone");}
-                return new OkObjectResult(contact);
-            }
+                var contact = await _service.SearchAsync(emailorphone);
 
-            return new OkObjectResult(await _context.Contacts.ToListAsync());
+                if (contact == null)
+                {
+                    return new OkObjectResult(contact);
+                }
+
+                else return new NotFoundObjectResult($"There is no contact with {emailorphone} as their Email nor their phone"); 
+            } 
+
+            return new OkObjectResult(await _service.GetAllContactsAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(long id)
         {
-            var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
+            var contact = await _service.GetContactByIdAsync(id);
+
             if (contact == null)
             {
                 return new NotFoundObjectResult($"There is no contact with ID: {id}");
@@ -89,8 +68,8 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
-            _context.Contacts.Add(contact);
-            await _context.SaveChangesAsync();
+            await _service.SaveContactAsync(contact);
+
             return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
         }
 
@@ -102,26 +81,23 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                 return new BadRequestObjectResult($"There is no contact with ID: {id}");
             }
 
-            _context.Update(contact).State = EntityState.Modified;
-            // or the followings are also valid
-            // context.Students.Update(contact);
-            // context.Attach<Student>(contact).State = EntityState.Modified;
-            // context.Entry<Student>(contact).State = EntityState.Modified; 
+            await _service.UpdateContactAsync(contact);
 
-            await _context.SaveChangesAsync();
             return new NoContentResult();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(long id)
         {
-            var contact = await _context.Contacts.Where(e => e.Id == id).FirstOrDefaultAsync();
+            var contact = await _service.GetContactByIdAsync(id);
+
             if (contact == null)
             {
-                return NotFound();
+                return new NotFoundObjectResult($"There is no contact with ID: {id}");
             }
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
+
+            await _service.DeleteContactAsync(contact);
+
             return new NoContentResult();
         }
     }
