@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SolsticeCodeChallengeWebAPI.Models;
+using SolsticeCodeChallengeWebAPI.Services;
 
 namespace SolsticeCodeChallengeWebAPI
 {
@@ -21,14 +22,16 @@ namespace SolsticeCodeChallengeWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services.AddDbContext<ContactDbContext>(options =>
-                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
-            services.AddMvc().AddJsonOptions(options => {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            services.AddScoped<IContactService, ContactService>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                             .AddJsonOptions(options => 
+                             {
+                                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

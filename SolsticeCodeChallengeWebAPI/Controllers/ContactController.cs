@@ -12,11 +12,10 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
     public class ContactController : ControllerBase
     {
         //private readonly ContactDbContext _context;
-        private readonly ContactService _service;
+        private readonly IContactService _service;
 
-        public ContactController(ContactDbContext context)
+        public ContactController(IContactService service)
         {
-            ContactService service = new ContactService(context);
             _service = service;
         }
 

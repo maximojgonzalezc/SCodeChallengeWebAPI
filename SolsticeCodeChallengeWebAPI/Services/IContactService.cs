@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SolsticeCodeChallengeWebAPI.Services
 {
-    interface IContactService
+    public interface IContactService
     {
         Task<List<Contact>> GetAllContactsAsync();
 
