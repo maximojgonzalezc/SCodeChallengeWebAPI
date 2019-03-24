@@ -42,7 +42,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
             {
                 var contact = await _service.SearchAsync(emailorphone);
 
-                if (contact == null)
+                if (contact != null)
                 {
                     return new OkObjectResult(contact);
                 }

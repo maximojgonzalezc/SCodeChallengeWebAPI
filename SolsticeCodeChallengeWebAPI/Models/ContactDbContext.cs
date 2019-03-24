@@ -24,6 +24,7 @@ namespace SolsticeCodeChallengeWebAPI.Models
                 e.OwnsOne(p => p.ContactPhone).Property(c => c.PersonalPhone).HasColumnName("PersonalPhone");
                 e.OwnsOne(p => p.ContactPhone).Property(c => c.WorkPhone).HasColumnName("WorkPhone");
 
+                e.HasAlternateKey(c => c.Email);
             });
         }
     }
