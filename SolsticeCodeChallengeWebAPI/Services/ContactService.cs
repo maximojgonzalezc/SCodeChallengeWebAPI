@@ -16,7 +16,8 @@ namespace SolsticeCodeChallengeWebAPI.Services
             _context = context;
 
             // Create a new Contact if collection is empty,
-            
+            if (_context.Contacts.Count() == 0)
+            {
                 _context.Contacts.Add(new Contact
                 {
                     Name = "Proof1",
@@ -38,7 +39,7 @@ namespace SolsticeCodeChallengeWebAPI.Services
                     }
                 });
                 _context.SaveChanges();
-            
+            }
         }
 
         public async Task<List<Contact>> GetAllContactsAsync()

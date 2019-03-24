@@ -12,7 +12,6 @@ namespace SolsticeCodeChallengeWebAPI.Models
             [Required(ErrorMessage = "Company name is required ")]
             public string Company { get; set; }
             public string ProfileImageURL { get; set; }
-            [Key]
             [Required(ErrorMessage = "Contact Emil is required ")]
             public string Email { get; set; }
             [Required(ErrorMessage = "Birthday is required ")]
