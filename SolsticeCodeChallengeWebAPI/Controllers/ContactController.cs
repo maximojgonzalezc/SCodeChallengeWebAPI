@@ -67,9 +67,15 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
-            await _service.SaveContactAsync(contact);
+            var existingContact = await _service.SearchAsync(contact.Email);
 
-            return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
+            if (existingContact == null)
+            {
+                await _service.SaveContactAsync(contact);
+                return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
+            }
+            else return new BadRequestObjectResult($"The email {contact.Email} it´s already in use");
+
         }
 
         [HttpPut("{id}")]
