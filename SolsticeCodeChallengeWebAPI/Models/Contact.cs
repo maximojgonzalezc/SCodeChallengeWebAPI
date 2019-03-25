@@ -10,7 +10,6 @@ namespace SolsticeCodeChallengeWebAPI.Models
             [Required(ErrorMessage = "Contact name is required ")]
             public string Name { get; set; }
             [MaxLength(40)]
-            [Required(ErrorMessage = "Company name is required ")]
             public string Company { get; set; }
             public string ProfileImageURL { get; set; }
             [Required(ErrorMessage = "Contact Email is required ")]
@@ -26,11 +25,14 @@ namespace SolsticeCodeChallengeWebAPI.Models
         public class Address
         {
             public long id { get; set; }
+            [MaxLength(60)]
             [Required(ErrorMessage = "Address Line 1 is required ")]
             public string AddressLine1 { get; set; }
             public string AddressLine2 { get; set; }
+            [MaxLength(40)]
             [Required(ErrorMessage = "Address City is required ")]
             public string City { get; set; }
+            [MaxLength(40)]
             [Required(ErrorMessage = "Address State is required ")]
             public string State { get; set; }
             public Contact Contact { get; set; }
