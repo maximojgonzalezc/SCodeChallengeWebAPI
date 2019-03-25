@@ -84,10 +84,7 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact(long id, Contact contact)
         {
-            if (id != contact.Id)
-            {
-                return new BadRequestObjectResult($"There is no contact with ID: {id}");
-            }
+            contact.Id = id;
 
             await _service.UpdateContactAsync(contact);
 
