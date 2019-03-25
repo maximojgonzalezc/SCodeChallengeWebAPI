@@ -27,8 +27,8 @@ namespace SolsticeCodeChallengeWebAPI.Services
                     BirthDate = new DateTime(1991, 02, 28),
                     ContactPhone = new ContactPhone
                     {
-                        PersonalPhone = 123456,
-                        WorkPhone = 456789
+                        PersonalPhone = "123123",
+                        WorkPhone = "123123"
                     },
                     Address = new Address
                     {
