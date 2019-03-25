@@ -67,6 +67,10 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
+            if (!(_service.IsValidEmail(contact.Email))) {
+                return new BadRequestObjectResult($"{contact.Email} is not a valid Email");
+            }
+
             var existingContact = await _service.SearchAsync(contact.Email);
 
             if (existingContact == null)
@@ -75,7 +79,6 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
                 return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
             }
             else return new BadRequestObjectResult($"The email {contact.Email} it´s already in use");
-
         }
 
         [HttpPut("{id}")]
