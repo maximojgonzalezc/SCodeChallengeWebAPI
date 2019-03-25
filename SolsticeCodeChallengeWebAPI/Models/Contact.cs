@@ -24,7 +24,7 @@ namespace SolsticeCodeChallengeWebAPI.Models
 
         public class Address
         {
-            public long id { get; set; }
+            public long Id { get; set; }
             [MaxLength(60)]
             [Required(ErrorMessage = "Address Line 1 is required ")]
             public string AddressLine1 { get; set; }
@@ -40,7 +40,7 @@ namespace SolsticeCodeChallengeWebAPI.Models
 
         public class ContactPhone
         {
-            public long ContactPhoneid { get; set; }
+            public long Id { get; set; }
             [Required(ErrorMessage = "Personal Phone is required ")]
             public long PersonalPhone { get; set; }
             public long WorkPhone { get; set; }
