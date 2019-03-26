@@ -19,7 +19,5 @@ namespace SolsticeCodeChallengeWebAPI.Services
         Task<Contact> SearchAsync(string filterProp);
 
         Task<List<Contact>> FilterAsync(string filterProp);
-
-        bool IsValidEmail(string email);
     }
 }

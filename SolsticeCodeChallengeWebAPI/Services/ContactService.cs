@@ -27,8 +27,8 @@ namespace SolsticeCodeChallengeWebAPI.Services
                     BirthDate = new DateTime(1991, 02, 28),
                     ContactPhone = new ContactPhone
                     {
-                        PersonalPhone = "123123",
-                        WorkPhone = "123123"
+                        PersonalPhone = "2123244152",
+                        WorkPhone = "2123244153"
                     },
                     Address = new Address
                     {
@@ -69,10 +69,6 @@ namespace SolsticeCodeChallengeWebAPI.Services
         public async Task UpdateContactAsync(Contact contact)
         {
             _context.Update(contact).State = EntityState.Modified;
-            // or the followings are also valid
-            // context.Students.Update(contact);
-            // context.Attach<Student>(contact).State = EntityState.Modified;
-            // context.Entry<Student>(contact).State = EntityState.Modified; 
 
             await _context.SaveChangesAsync();
         }
@@ -96,19 +92,6 @@ namespace SolsticeCodeChallengeWebAPI.Services
                     .ToListAsync();
 
             return filteredList;
-        }
-
-        public bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        }        
     }
 }

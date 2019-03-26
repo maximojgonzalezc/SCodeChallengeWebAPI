@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SolsticeCodeChallengeWebAPI.Models;
+using SolsticeCodeChallengeWebAPI.Models.Validator;
 using SolsticeCodeChallengeWebAPI.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,8 +68,13 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
-            if (!(_service.IsValidEmail(contact.Email))) {
-                return new BadRequestObjectResult($"{contact.Email} is not a valid Email");
+            contactValidator validator = new contactValidator();
+
+            var errorList = validator.ValidateContact(contact);
+
+            if (errorList.Any())
+            {
+                return new BadRequestObjectResult(errorList);
             }
 
             var existingContact = await _service.SearchAsync(contact.Email);
@@ -84,6 +90,15 @@ namespace SolsticeCodeChallengeWebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact(long id, Contact contact)
         {
+            contactValidator validator = new contactValidator();
+
+            var errorList = validator.ValidateContact(contact);
+
+            if (errorList.Any())
+            {
+                return new BadRequestObjectResult(errorList);
+            }
+
             contact.Id = id;
 
             await _service.UpdateContactAsync(contact);
