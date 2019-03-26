@@ -1,6 +1,10 @@
-Setup 
+# Setup 
 
-Download .NET Core 2.2 SDK (Or just the runtime)
+## ATENTION Chicago devs:
+## You will find two other files in this repository calld ReadmeAsWell (docs & pdf)
+## In there you will find the development procedures, workflow, assumptions.
+
+## Download .NET Core 2.2 SDK (Or just the runtime)
 To build and run the project using the command line:
 1.	Open the Command Prompt
 2.	Download the project repository with the following command: “git clone https://github.com/maximojgonzalezc/SCodeChallengeWebAPI.git”
@@ -13,9 +17,9 @@ To build and run the project using the command line:
 Point your browser to http://localhost:5000
 Of course, you can also run it from either Visual Studio 2017 or Visual Studio Code with the IDE handling most of the steps above. 
 
-To run the unit tests follow all steps until 4, followed by:
+## To run the unit tests follow all steps until 4, followed by:
 1.	Step into the project src “cd SCodeChallengeWebAPITest”
 2.	Run “dotnet test”
 
-API Endpoints documentation:
+## API Endpoints documentation:
 https://documenter.getpostman.com/view/6990804/S17tQ7i7
